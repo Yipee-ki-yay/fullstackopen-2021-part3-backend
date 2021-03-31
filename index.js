@@ -79,8 +79,6 @@ app.post('/api/persons', (request, response) => {
   const isDataMissing = !body.name || !body.number
   const isNameUnique = persons.find(p => p.name === body.name)
 
-  console.log('isNameUnique', isNameUnique);
-
   if (isDataMissing) {
     return response.status(400).json({
       error: 'The name or number is missing'
