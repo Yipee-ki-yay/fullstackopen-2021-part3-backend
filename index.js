@@ -6,10 +6,11 @@ const app = express()
 const Person = require('./models/person')
 
 morgan.token(
-  'data', 
-  function (req, res) { 
+  'data',
+  // eslint-disable-next-line no-unused-vars
+  function (req, res) {
     return JSON.stringify(
-      {"name": req.body.name, "number": req.body.number }
+      { 'name': req.body.name, 'number': req.body.number }
     )
   }
 )
@@ -25,7 +26,7 @@ app.get('/', (request, response) => {
 
 app.get('/info', (request, response) => {
   Person.count({}, function( err, count){
-    const date = new Date();
+    const date = new Date()
     response.send(
       `<div>
         <div>Phonebook has info for ${count} people</div>
@@ -35,33 +36,36 @@ app.get('/info', (request, response) => {
   })
 })
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   Person.find({}).then(result => {
-    console.log('phonebook:');
-    result.forEach(({name, number}) => {
+    console.log('phonebook:')
+    result.forEach(({ name, number }) => {
       console.log(`${name} ${number}`)
     })
     response.json(result)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-  Person.findById(request.params.id).then(person => {
-    if (person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id).then(result => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
+  // eslint-disable-next-line no-unused-vars
+  Person.findByIdAndRemove(request.params.id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
@@ -102,7 +106,7 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, {new: true, runValidators: true, context: 'query'})
+  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
